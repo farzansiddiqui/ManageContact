@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ManageContact</string>
+    <string name="enter_name">please enter name!</string>
+</resources>
