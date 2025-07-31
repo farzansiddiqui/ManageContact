@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siddiqui.myapplication.model.Contact
 import com.siddiqui.myapplication.viewModel.ContactsViewModel
@@ -33,15 +35,13 @@ fun ContactsScreen(viewModel: ContactsViewModel = viewModel()) {
         )
     }
 
-    // This launcher is used to request the permission
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         hasPermission = isGranted
     }
 
-    // Effect to run once when the composable is first displayed
-    // if permission is already granted.
+
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
             viewModel.fetchContacts(context.contentResolver)
@@ -57,10 +57,11 @@ fun ContactsScreen(viewModel: ContactsViewModel = viewModel()) {
         ContactList(contacts = contacts)
     } else {
         PermissionRequestScreen {
-            // On button click, launch the permission request
             permissionLauncher.launch(Manifest.permission.READ_CONTACTS)
         }
     }
+
+
 }
 
 @Composable

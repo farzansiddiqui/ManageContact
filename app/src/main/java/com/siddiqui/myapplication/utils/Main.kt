@@ -1,16 +1,130 @@
 package com.siddiqui.myapplication.utils
 
+import java.util.Stack
 import kotlin.math.max
 
 
 fun main() {
-    val charArray = charArrayOf('a','a','b','b','c','c','c')
-    println(reverseWordsUsingArray("Farzan Hassan Siddiqui"))
+        val nums = intArrayOf(1, 5, 3, 19, 18, 25)
+        println(isBalanced("{[])}"))
+
+        val topic = Topic1()
+        topic.understand()
+        val volume = Box()
+        val value = volume.volResult(5,5,4)
+        println(value)
+
+
 
 
 }
 
+interface CalVolume {
+   fun volResult( length:Int,  width:Int, height: Int):Int
+}
 
+class Box : CalVolume {
+    override fun volResult(length: Int, width: Int, height: Int): Int {
+        return length * height * width
+    }
+}
+
+
+interface Topic {
+    fun understand()
+}
+class Topic1 : Topic {
+    override fun understand() {
+        println("Got it")
+    }
+}
+class Topic2 : Topic {
+    override fun understand() {
+        println("Understand")
+    }
+}
+
+
+fun isBalanced(s: String): Boolean {
+    // Declare a stack to store the opening brackets
+
+    val st = Stack<Char>()
+    for (i in 0 until s.length) {
+        // Check if the character is an opening bracket
+
+        if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
+            st.push(s[i])
+        } else {
+
+            if (!st.empty() &&
+                ((st.peek() == '(' && s[i] == ')') ||
+                        (st.peek() == '{' && s[i] == '}') ||
+                        (st.peek() == '[' && s[i] == ']'))
+            ) {
+                st.pop()
+            } else {
+                return false
+            }
+        }
+    }
+
+
+    // If stack is empty, return true (balanced),
+    // otherwise false
+    return st.empty()
+}
+fun printGroupBy(fruits: List<String>): List<String>{
+    val value  = fruits.groupBy { it.first() }.map { it.value.first() }
+    return value
+
+}
+
+fun isValidString(word: String): Boolean {
+    if (word.length < 3) return false
+    val conditions = mutableListOf<Boolean>(false,false)
+    for (i in word){
+        if (!(i in '0'..'9' || i in 'a'..'z' || i in 'A'.. 'Z')){
+            return false
+        }
+        if (i in listOf('a','e','i','o','u') || i in listOf('A','E','I','U','O')) {
+            conditions[0] = true
+        }
+        else if (i in 'a'..'z') conditions[1] = true
+        else if (i in 'A'..'Z') conditions[1] = true
+    }
+    for (i in conditions){
+        if (!i) return false
+    }
+    return true
+
+}
+
+fun isValid(word: String): Boolean {
+    return word.length >= 3 && word.chars()
+        .allMatch { codePoint: Int -> Character.isLetterOrDigit(codePoint) } &&
+            word.chars().anyMatch { c: Int -> isVowel(c.toChar()) } &&
+            word.chars().anyMatch { c: Int -> isConsonant(c.toChar()) }
+}
+
+ fun isVowel(c: Char): Boolean {
+    return "aeiouAEIOU".indexOf(c) != -1
+}
+
+ fun isConsonant(c: Char): Boolean {
+    return Character.isLetter(c) && !isVowel(c)
+}
+
+fun findMinDifference(nums: IntArray): Int{
+        nums.sort()
+    var diff = Integer.MAX_VALUE
+    for (i in 0 until nums.size - 1) {
+        if (nums[i +1] - nums[i] < diff){
+            diff = nums[i + 1] - nums[i]
+        }
+    }
+    return diff
+
+}
 
 fun countOrder(str: String): String{
     val result = StringBuilder()
@@ -48,6 +162,21 @@ fun compress(chars: CharArray):Int {
 
 }
 
+fun printTwoArray(){
+    val twoDArray = Array(3){ Array(4) {0} }
+    println(twoDArray.contentDeepToString())
+}
+
+fun twoSum(nums: IntArray,target:Int): Boolean {
+    for (i in 0 until   nums.size){
+        for (j in i + 1 until  nums.size){
+            if (nums[i] + nums[j] == target){
+                return true
+            }
+        }
+    }
+    return false
+}
 
 fun enCoding(str: String): String {
     if (str.isEmpty()) return  "" //"wwwwaaadexxxxxxywww"
@@ -89,6 +218,19 @@ fun removeDuplicates(nums: IntArray): Int {
     }
 
     return uniqueIndex
+}
+
+fun removeElement(nums: IntArray):Int {
+    var count = 0
+    for (i in nums.indices){
+        if (i < nums.size -1 && nums[i] == nums[i + 1]){
+            continue
+        }else {
+            nums[count] = nums[i]
+            count++
+        }
+    }
+    return count
 }
 
 fun lengthOfLongestSubstring(s: String): Int {
@@ -140,6 +282,7 @@ fun reverseWords(str: String):String { // Farzan Hassan Siddiqui
         if (i != 0){
             res.append(" ")
         }
+
     }
     return  res.toString()
 }

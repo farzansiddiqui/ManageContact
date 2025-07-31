@@ -3,6 +3,8 @@ package com.siddiqui.myapplication.viewModel
 import android.content.ContentResolver
 import android.provider.ContactsContract
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.siddiqui.myapplication.model.Contact
@@ -16,12 +18,13 @@ class ContactsViewModel : ViewModel() {
     private val _contacts = MutableStateFlow<List<Contact>>(emptyList())
     val contacts = _contacts.asStateFlow()
 
+
+
     fun fetchContacts(contentResolver: ContentResolver) {
         viewModelScope.launch {
             val contactList = withContext(Dispatchers.IO) {
               val rawContacts =   getPhoneContacts(contentResolver)
                 val uniqueContacts = rawContacts.groupBy { it.name }.map { it.value.first() }
-
                 uniqueContacts
 
             }
