@@ -1,33 +1,25 @@
 package com.siddiqui.myapplication.utils
 
+import com.siddiqui.myapplication.model.User
 import java.util.Stack
 import kotlin.math.max
 
 
 fun main() {
-        val nums = intArrayOf(1, 5, 3, 19, 18, 25)
+        val nums = intArrayOf(1, 2, 3, 4, 4, 5, 3, 4, 2, 4)
         println(isBalanced("{[])}"))
-
-        val topic = Topic1()
-        topic.understand()
-        val volume = Box()
-        val value = volume.volResult(5,5,4)
-        println(value)
-
-
-
+        val newLength = removeDuplicates(nums)
+        println("Array after removing duplicates: ${nums.sliceArray(0 until newLength ).joinToString() }")
 
 }
 
-interface CalVolume {
-   fun volResult( length:Int,  width:Int, height: Int):Int
+
+
+fun printString(str:String, myString:(String)-> String ):String {
+    return myString(str)
 }
 
-class Box : CalVolume {
-    override fun volResult(length: Int, width: Int, height: Int): Int {
-        return length * height * width
-    }
-}
+
 
 
 interface Topic {
@@ -137,6 +129,21 @@ fun countOrder(str: String): String{
         result.append(key).append(value)
     }
     return result.toString()
+}
+
+
+fun isPrime(num: Int): Boolean {
+    if (num <= 1) {
+        return false
+    }
+    var i = 2
+    while (i * i <= num) {
+        if (num % i == 0) {
+            return false
+        }
+        i++
+    }
+    return true
 }
 
 fun compress(chars: CharArray):Int {

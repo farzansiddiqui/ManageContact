@@ -1,8 +1,13 @@
 package com.siddiqui.myapplication.viewModel
 
 import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,11 +18,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.core.net.toUri
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 
 class ContactsViewModel : ViewModel() {
     private val _contacts = MutableStateFlow<List<Contact>>(emptyList())
     val contacts = _contacts.asStateFlow()
-
 
 
     fun fetchContacts(contentResolver: ContentResolver) {
@@ -31,6 +38,66 @@ class ContactsViewModel : ViewModel() {
             _contacts.value = contactList
         }
     }
+
+    fun isNumberOnWhatsUp(context: Context, phoneNumber:String): Boolean {
+        val contentResolver = context.contentResolver
+        val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber))
+        val projection = arrayOf(ContactsContract.PhoneLookup._ID)
+        val cursor = contentResolver.query(uri, projection , null,null,null)
+        cursor?.use {
+            if (it.moveToFirst()){
+                val contactId = it.getLong(it.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID))
+
+                val rawContactUri = ContactsContract.RawContacts.CONTENT_URI
+                val selection = "${ContactsContract.RawContacts.CONTACT_ID} = ? AND ${ContactsContract.RawContacts.ACCOUNT_TYPE} = ?"
+                val selectionArgs = arrayOf(contactId.toString(), "com.whatsapp")
+
+                val rawCursor = contentResolver.query(rawContactUri, null, selection, selectionArgs, null)
+                rawCursor?.use { rc ->
+                    return rc.count > 0
+                }
+            }
+        }
+
+        return false
+    }
+
+    fun openWhatsAppChat(context: Context, rawNumber: String) {
+        val phoneNumber = rawNumber.replace("\\D".toRegex(), "")
+        val url = "https://wa.me/$phoneNumber"
+        Log.d("TAG", "openWhatsAppChat:$url ")
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+
+        val pm = context.packageManager
+
+        // Try regular WhatsApp
+        if (isAppInstalled(pm, "com.whatsapp")) {
+            intent.setPackage("com.whatsapp")
+            context.startActivity(intent)
+            return
+        }
+
+        // Try WhatsApp Business
+        if (isAppInstalled(pm, "com.whatsapp.w4b")) {
+            intent.setPackage("com.whatsapp.w4b")
+            context.startActivity(intent)
+            return
+        }
+
+        // Neither version installed
+        Toast.makeText(context, "WhatsApp is not installed", Toast.LENGTH_SHORT).show()
+    }
+
+    fun isAppInstalled(pm: PackageManager, packageName:String): Boolean{
+        return try {
+            pm.getPackageInfo(packageName,0)
+            true
+        }catch (e: PackageManager.NameNotFoundException){
+            false
+        }
+    }
+
+
 
 
     private fun getPhoneContacts(contentResolver: ContentResolver): List<Contact> {
