@@ -8,8 +8,9 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.siddiqui.myapplication.model.Contact
@@ -20,11 +21,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.core.net.toUri
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 
 class ContactsViewModel : ViewModel() {
     private val _contacts = MutableStateFlow<List<Contact>>(emptyList())
     val contacts = _contacts.asStateFlow()
+
+    private val _filteredContacts = MutableStateFlow<List<Contact>>(emptyList())
+    val filteredContacts: StateFlow<List<Contact>> = _filteredContacts.asStateFlow()
+
+    var searchQuery by mutableStateOf("")
+        private set
+
 
 
     fun fetchContacts(contentResolver: ContentResolver) {
@@ -36,7 +43,22 @@ class ContactsViewModel : ViewModel() {
 
             }
             _contacts.value = contactList
+            _filteredContacts.value = contactList
+
         }
+    }
+
+    fun updateSearchQuery(query: String) {
+        searchQuery = query
+        _filteredContacts.value =
+            if (query.isBlank()) {
+                _contacts.value
+            } else {
+                _contacts.value.filter {
+                    it.name.contains(query, ignoreCase = true) ||
+                            it.phoneNumber.contains(query, ignoreCase = true)
+                }
+            }
     }
 
     fun isNumberOnWhatsUp(context: Context, phoneNumber:String): Boolean {

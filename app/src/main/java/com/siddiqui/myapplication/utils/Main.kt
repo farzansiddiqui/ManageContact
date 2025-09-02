@@ -1,5 +1,12 @@
 package com.siddiqui.myapplication.utils
 
+import com.siddiqui.myapplication.model.BitCoinPayment
+import com.siddiqui.myapplication.model.CreditCard
+import com.siddiqui.myapplication.model.PaymentMethod
+import com.siddiqui.myapplication.model.PaymentProcessor
+import com.siddiqui.myapplication.model.Rectangle
+import com.siddiqui.myapplication.model.Shape
+import com.siddiqui.myapplication.model.Square
 import com.siddiqui.myapplication.model.User
 import java.util.Stack
 import kotlin.math.max
@@ -10,6 +17,16 @@ fun main() {
         println(isBalanced("{[])}"))
         val newLength = removeDuplicates(nums)
         println("Array after removing duplicates: ${nums.sliceArray(0 until newLength ).joinToString() }")
+
+    val rectangle: Shape = Rectangle(5,10)
+    println(rectangle.getArea())
+
+    val square = Square(5)
+    println(square.getArea())
+
+    val paymentMethod: PaymentMethod = CreditCard()
+    val paymentProgression =  PaymentProcessor()
+    paymentProgression.processPayment(paymentMethod, 200.5)
 
 }
 
@@ -47,7 +64,6 @@ fun isBalanced(s: String): Boolean {
         if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
             st.push(s[i])
         } else {
-
             if (!st.empty() &&
                 ((st.peek() == '(' && s[i] == ')') ||
                         (st.peek() == '{' && s[i] == '}') ||
@@ -230,7 +246,7 @@ fun removeDuplicates(nums: IntArray): Int {
 fun removeElement(nums: IntArray):Int {
     var count = 0
     for (i in nums.indices){
-        if (i < nums.size -1 && nums[i] == nums[i + 1]){
+        if (i < nums.size - 1 && nums[i] == nums[i + 1]){
             continue
         }else {
             nums[count] = nums[i]
