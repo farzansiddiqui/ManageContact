@@ -1,5 +1,7 @@
 package com.siddiqui.myapplication
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +20,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +31,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.siddiqui.myapplication.navigation.NavigationStack
 import com.siddiqui.myapplication.ui.theme.ManageContactTheme
 
@@ -44,9 +51,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun Greeting() {
+
+
+
+    NotificationHandler(
+        onPermissionGranted = {  },
+        onPermissionDenied = {  }
+    )
+
     var showBottomSheet  by remember { mutableStateOf(false) }
     Box(modifier = Modifier
         .windowInsetsPadding(WindowInsets.systemBars)
@@ -67,6 +86,27 @@ fun Greeting() {
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun NotificationHandler(
+    onPermissionGranted:()-> Unit,
+    onPermissionDenied: ()-> Unit
+) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+
+        LaunchedEffect(permissionState.status) {
+            if (permissionState.status.isGranted){
+                onPermissionGranted()
+            }else if (permissionState.status.shouldShowRationale){
+                onPermissionDenied()
+            }
+        }
+
+    }
+
+
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

@@ -8,26 +8,78 @@ import com.siddiqui.myapplication.model.Rectangle
 import com.siddiqui.myapplication.model.Shape
 import com.siddiqui.myapplication.model.Square
 import com.siddiqui.myapplication.model.User
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
 import java.util.Stack
 import kotlin.math.max
 
 
 fun main() {
-        val nums = intArrayOf(1, 2, 3, 4, 4, 5, 3, 4, 2, 4)
-        println(isBalanced("{[])}"))
-        val newLength = removeDuplicates(nums)
-        println("Array after removing duplicates: ${nums.sliceArray(0 until newLength ).joinToString() }")
+   repeatActions(3){
+       println("Hello")
+   }
 
-    val rectangle: Shape = Rectangle(5,10)
-    println(rectangle.getArea())
 
-    val square = Square(5)
-    println(square.getArea())
+        val sum = { a: Int, b: Int -> a + b }
 
-    val paymentMethod: PaymentMethod = CreditCard()
-    val paymentProgression =  PaymentProcessor()
-    paymentProgression.processPayment(paymentMethod, 200.5)
 
+    val numberAdd = addHighOrder(25,3,sum)
+    println(numberAdd)
+
+    val str = "Farzan".conCateNate(" Siddiqui")
+    println(str)
+
+    val p1 = Point(10,20)
+    val p2 = Point(30,40)
+
+    val p3 = p1 + p2
+    println(p3)
+
+    println(isPalindrome("madam"))
+
+}
+
+fun simpleFlow(): Flow<Int> = flow {
+    for (i in 1..5){
+        delay(100)
+        emit(i)
+    }
+}
+
+fun String.getMiddleName(): String? {
+    val parts = this.trim().split("\\s+".toRegex())
+    return if (parts.size > 2){
+        parts.subList(1, parts.size - 1).joinToString(" ")
+    }else {
+        null
+    }
+}
+
+
+val greet = {name: String-> println("Hello $name")}
+
+
+
+data class Point(val x:Int, val b: Int){
+    operator fun plus(other: Point):Point {
+        return Point(other.x, other.b)
+    }
+}
+
+fun String.conCateNate(str: String):String{
+    return this + str
+}
+
+fun addHighOrder(a:Int, b:Int,add:(Int, Int)-> Int):Int {
+    return add(a, b)
+}
+
+inline fun repeatActions(times:Int, action:()-> Unit){
+    for (i in 0 until times){
+        action()
+    }
 }
 
 
@@ -158,6 +210,20 @@ fun isPrime(num: Int): Boolean {
             return false
         }
         i++
+    }
+    return true
+}
+
+fun isPalindrome(str: String): Boolean {
+    var i = 0
+    var j = str.length - 1
+
+    while (i < j){
+        if (str[i] != str[j]){
+            return false
+        }
+        i++
+        j--
     }
     return true
 }

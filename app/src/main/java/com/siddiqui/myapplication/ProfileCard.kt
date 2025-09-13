@@ -1,6 +1,7 @@
 package com.siddiqui.myapplication
 
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
@@ -23,6 +25,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +40,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.siddiqui.myapplication.model.UserProfile
 import com.siddiqui.myapplication.model.userProfileListItem
+import kotlin.math.log
 
 
 @Composable
@@ -93,7 +100,9 @@ fun ProfilePicture(drawableInt: Int,onlineStatus: Boolean) {
 }
 @Composable
 fun ProfileContent(userProfile: String, onlineStatus: Boolean) {
-    Column(modifier = Modifier.padding(8.dp).fillMaxWidth()) {
+    Column(modifier = Modifier
+        .padding(8.dp)
+        .fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
@@ -119,11 +128,35 @@ fun ProfileContent(userProfile: String, onlineStatus: Boolean) {
 
 }
 
+@Composable
+fun Counter(){
+    val count = remember { mutableIntStateOf(0) }
+
+    SideEffect {
+        Log.d("TAG", "Counter: ${count.intValue}")
+    }
+
+
+    Column(modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(onClick = {
+            count.intValue++
+        }) {
+            Text(text = "Increase Count", color = Color.White)
+        }
+
+        Text("Counter Value: ${count.intValue}")
+    }
+
+
+}
+
 
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun DefaultPreView(){
-    MainScreen()
+    Counter()
 
 }

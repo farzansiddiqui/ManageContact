@@ -34,7 +34,6 @@ fun NavigationStack(onExitTabs :()-> Unit){
     val tabs = listOf(Screen.Record, Screen.Player, Screen.Setting)
     val viewModel = remember { RecordingViewModel(context = context) }
 
-    // Connect navigation controller with tab selection
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
             val route = backStackEntry.destination.route
@@ -61,7 +60,6 @@ fun NavigationStack(onExitTabs :()-> Unit){
                             }
                             launchSingleTop = true
                             restoreState = true
-
                         }
 
 
