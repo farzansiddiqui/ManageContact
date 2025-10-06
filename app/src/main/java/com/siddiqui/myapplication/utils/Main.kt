@@ -1,46 +1,111 @@
 package com.siddiqui.myapplication.utils
 
-import com.siddiqui.myapplication.model.BitCoinPayment
-import com.siddiqui.myapplication.model.CreditCard
-import com.siddiqui.myapplication.model.PaymentMethod
-import com.siddiqui.myapplication.model.PaymentProcessor
-import com.siddiqui.myapplication.model.Rectangle
-import com.siddiqui.myapplication.model.Shape
-import com.siddiqui.myapplication.model.Square
-import com.siddiqui.myapplication.model.User
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import java.util.Stack
 import kotlin.math.max
 
 
-fun main() {
-   repeatActions(3){
-       println("Hello")
-   }
+data class Person(var name:String, var age: Int)
+ fun main() {
+
+    val nums = intArrayOf(2,7,11,15)
+    val target = 9
+    println(minimumApproach(nums, target).contentToString())
+
+     val personList = listOf(
+         Person("Farzan", 28),
+         Person("Farzan", 28),
+         Person("Farzan", 28),
+         Person("Farzan", 28),
+         Person("Farzan", 28))
+
+     val findName = personList.map { it.name }.toList()
+     println(findName)
+
+     val testing = personList.sortedBy { it.name }.distinctBy { it.name }
+     println(testing.map { it.name })
+
+ }
 
 
-        val sum = { a: Int, b: Int -> a + b }
 
 
-    val numberAdd = addHighOrder(25,3,sum)
-    println(numberAdd)
+fun secondLargest(nums: IntArray):Int?{
+    val sortedArr = nums.distinct().sorted()
+    return if (nums.size > 1) sortedArr[sortedArr.size - 2] else null
+}
 
-    val str = "Farzan".conCateNate(" Siddiqui")
-    println(str)
+fun findMax(arr:Array<Int>):Int? {
+    return arr.maxOrNull()
+}
 
-    val p1 = Point(10,20)
-    val p2 = Point(30,40)
+fun countVowels(input: String): Int {
+    return input.count { it in "aeiouAEIOU" }
 
-    val p3 = p1 + p2
-    println(p3)
-
-    println(isPalindrome("madam"))
 
 }
 
+
+fun secondLargest(nums: Array<Int>):Int? {
+    val sortedArray = nums.distinct().sorted()
+    return if (sortedArray.size > 1) sortedArray[sortedArray.size - 2] else null
+}
+
+
+fun minimumApproach(nums: IntArray, target: Int): IntArray {
+    val mutableHasMap = mutableMapOf<Int, Int>()
+    for (i in nums.indices){
+        if (mutableHasMap.containsKey(target - nums[i])){
+            return intArrayOf(mutableHasMap[target - nums[i]] ?: 0, i)
+        }
+        mutableHasMap[nums[i]] = i
+    }
+    return intArrayOf()
+
+}
+
+fun twoSums(nums: IntArray, target: Int): IntArray {
+    for (i in nums.indices){
+        for (j in i + 1 until nums.size){
+            if (nums[i] + nums[j] == target){
+                return intArrayOf(i, j)
+            }
+        }
+    }
+    return intArrayOf(-1,-1)
+}
+
+data class Product(val name:String, val priceIncents:Int)
+
+
+fun getProducts():Flow<Product> = flow {
+    // Simulating an API call returning products with prices in cents
+    emit(Product("Apple", 4530))
+    emit(Product("PineApple", 1330))
+    emit(Product("Banana", 3025))
+    emit(Product("Guava", 5830))
+}
+
+
+
+
+fun findCommonElements(arr: IntArray, arr1: IntArray): List<Int>{
+    return arr.intersect(arr1.toSet()).toList()
+}
+
+fun sortByLength(input: List<String>):List<String> {
+    return input.sortedBy { it.length }
+}
+
+
+    val numbers:Flow<Int> = flow {
+        repeat(60){it->
+            emit(it+1)
+            delay(1000)
+        }
+    }
 fun simpleFlow(): Flow<Int> = flow {
     for (i in 1..5){
         delay(100)
@@ -57,9 +122,42 @@ fun String.getMiddleName(): String? {
     }
 }
 
+fun insertionSort(nums: IntArray){
+    val n = nums.size
+    for (i in 1 until n){
+        val key = nums[i]
+        var j = i - 1
+
+        while (j >=0 && nums[j] > key){
+            nums[j+1] = nums[j]
+            j = j - 1
+        }
+        nums[j + 1] = key
+    }
+}
+
+fun AlphanumericConversion(N: Int, S: String): String {
+    // this is default OUTPUT. You can change it.
+    val result = StringBuilder()
+
+    // iterate through each character
+    for (i in 0..<N) {
+        val c = S[i]
+
+        if (Character.isUpperCase(c)) {
+            result.append(c.lowercaseChar())
+        } else if (Character.isLowerCase(c)) {
+            result.append(c.uppercaseChar())
+        } else {
+            // if it's a digit, just keep it
+            result.append(c)
+        }
+    }
+    return result.toString()
+}
+
 
 val greet = {name: String-> println("Hello $name")}
-
 
 
 data class Point(val x:Int, val b: Int){
@@ -90,6 +188,18 @@ fun printString(str:String, myString:(String)-> String ):String {
 
 
 
+open class Bike{
+    open fun run(){
+        println("running")
+    }
+}
+
+class Splendor : Bike() {
+    override fun run() {
+        println("running fast")
+    }
+}
+
 
 interface Topic {
     fun understand()
@@ -115,8 +225,8 @@ fun isBalanced(s: String): Boolean {
 
         if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
             st.push(s[i])
-        } else {
-            if (!st.empty() &&
+        } else{
+            if ( !st.empty() &&
                 ((st.peek() == '(' && s[i] == ')') ||
                         (st.peek() == '{' && s[i] == '}') ||
                         (st.peek() == '[' && s[i] == ']'))
@@ -219,11 +329,24 @@ fun isPalindrome(str: String): Boolean {
     var j = str.length - 1
 
     while (i < j){
-        if (str[i] != str[j]){
+        if (str[i] != str[j]+6){
             return false
         }
         i++
         j--
+    }
+    return true
+}
+
+fun checkAnaGram(str: String,str1: String): Boolean {
+    if (str.length != str1.length) return false
+    val frq = IntArray(26)
+    for(i in str1.indices){
+        frq[str[i] - 'a']++
+        frq[str1[i] - 'a']--
+    }
+    for (i in frq){
+        if (i != 0) return false
     }
     return true
 }

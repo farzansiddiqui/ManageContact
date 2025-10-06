@@ -26,6 +26,12 @@ class RecordingService : Service() {
         mediaSession = MediaSessionCompat(this, "RecordingService").apply {
             isActive = true
         }
+        stateBuilder = PlaybackStateCompat.Builder()
+            .setActions(
+                PlaybackStateCompat.ACTION_PLAY or
+                        PlaybackStateCompat.ACTION_PAUSE or
+                        PlaybackStateCompat.ACTION_SEEK_TO
+            )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

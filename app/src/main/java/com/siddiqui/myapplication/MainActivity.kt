@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ManageContactTheme {
                 Greeting()
+
             }
 
         }

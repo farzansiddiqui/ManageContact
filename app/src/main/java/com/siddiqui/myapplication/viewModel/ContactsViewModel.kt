@@ -20,11 +20,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.core.net.toUri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.StateFlow
 
 class ContactsViewModel : ViewModel() {
     private val _contacts = MutableStateFlow<List<Contact>>(emptyList())
     val contacts = _contacts.asStateFlow()
+
+    val currentName: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+
 
     private val _filteredContacts = MutableStateFlow<List<Contact>>(emptyList())
     val filteredContacts: StateFlow<List<Contact>> = _filteredContacts.asStateFlow()

@@ -27,13 +27,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siddiqui.myapplication.model.Contact
 import com.siddiqui.myapplication.viewModel.ContactsViewModel
 
 @Composable
 fun ContactsScreen(viewModel: ContactsViewModel = viewModel()) {
+
     val context = LocalContext.current
+
+    val nameObserver = Observer<String>{newName->
+        println(newName)
+    }
+
+
+
     var hasPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
