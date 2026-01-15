@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 
 
 /*
@@ -38,6 +44,19 @@ Write code to implement an animation (Jetpack Compose / XML)
 * */
 @Composable
 fun ShowAnimation() {
+    val lifeCycleOwner = LocalLifecycleOwner.current
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        lifeCycleOwner.lifecycleScope.launch {
+            lifeCycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+
+                }
+            }
+        }
+    }
+
     var showAnimation by remember { mutableStateOf(false) }
     val animatedColor by animateColorAsState(
         targetValue = if (showAnimation) Color.Red else Color.Blue,
@@ -72,6 +91,7 @@ fun ShowAnimation() {
             )
         }
     }
+
 }
 
 

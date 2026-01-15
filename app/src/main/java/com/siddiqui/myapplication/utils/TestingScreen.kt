@@ -3,6 +3,8 @@ package com.siddiqui.myapplication.utils
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,9 +33,20 @@ fun TestingScreen(){
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TestingScreenPreview(){
-    TestingScreen()
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        item {
+            Text(text = "first screen")
+        }
+        items(5){
+            Text(text = "item $it")
+        }
+        item {
+            Text(text = "second screen")
+        }
+    }
 
 }
+
 
 sealed class MainIntent {
     object LoadData : MainIntent()
