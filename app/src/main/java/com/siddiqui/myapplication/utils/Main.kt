@@ -390,9 +390,6 @@ fun isBalanced(s: String): Boolean {
         }
     }
 
-
-    // If stack is empty, return true (balanced),
-    // otherwise false
     return st.empty()
 }
 
@@ -456,12 +453,13 @@ fun countOrder(str: String): String {
     val hashMap = mutableMapOf<Char, Int>()
 
     for (i in str.indices) {
-
         hashMap[str[i]] = hashMap.getOrDefault(str[i], 0) + 1
     }
+
     for ((key, value) in hashMap) {
         result.append(key).append(value)
     }
+
     return result.toString()
 }
 
@@ -526,6 +524,7 @@ fun traversePeripheral(matrix: Array<IntArray>):List<Int> {
 }
 
 fun isPalindrome(str: String): Boolean {
+
     var i = 0
     var j = str.length - 1
 
@@ -538,13 +537,15 @@ fun isPalindrome(str: String): Boolean {
     }
     return true
 }
+
+
 fun rotateArrayByDPosition(arr: IntArray, d: Int){
     val length = arr.size
     for (i in 0 ..<d){
         val temp = arr[0]
         for (j in arr.indices){
             arr[j] = arr[j+1]
-        }
+         }
         arr[length - 1] = temp
         }
 
