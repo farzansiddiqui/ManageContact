@@ -1,8 +1,15 @@
 package com.siddiqui.myapplication.utils
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import okhttp3.Dispatcher
 import java.util.EnumSet
 import java.util.Stack
 import kotlin.math.abs
@@ -12,19 +19,24 @@ import kotlin.math.sqrt
 
 data class Person(var name: String, var age: Int)
 
-fun main() {
+suspend fun main() {
     val node1 = Node(1)
     val node2 = Node(2)
     val node3 = Node(3)
     node1.next = node2
     node2.next = node3
     println(node1)
-    val animal: Animal = Cat()
-    val animal1: Animal = Dog()
-    val animal2 = Animal()
-    animal.makeSound()
-    animal1.makeSound()
-    animal2.makeSound()
+
+    producer()
+        .onStart {
+
+        }.onCompletion {
+
+        }.flowOn(Dispatchers.IO)
+        .collect {
+
+            println(Thread.currentThread().name)
+    }
 
 }
 
@@ -251,6 +263,35 @@ fun insertionSort(nums: IntArray) {
         nums[j + 1] = key
     }
 }
+
+
+interface Shape{
+    fun area(): Double
+
+}
+
+
+
+
+private fun producer(): Flow<Int>{
+    return flow {
+        val listOf = mutableListOf(1,3,2,4,5)
+        listOf.forEach {
+            delay(1000)
+            emit(it)
+            throw Exception("Error")
+        }
+    }.catch {
+        emit(-1)
+    }
+}
+
+class Rectangle(val width: Double, val height: Double): Shape {
+    override fun area(): Double {
+        return width * height
+    }
+}
+
 
 fun myAtoi(str: String):Int {
     var sign =0
