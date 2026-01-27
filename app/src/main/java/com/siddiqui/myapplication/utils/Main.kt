@@ -34,9 +34,9 @@ suspend fun main() {
 
         }.flowOn(Dispatchers.IO)
         .collect {
-
             println(Thread.currentThread().name)
     }
+
 
 }
 
@@ -161,17 +161,36 @@ fun secondLargest(nums: Array<Int>): Int? {
     return if (sortedArray.size > 1) sortedArray[sortedArray.size - 2] else null
 }
 
-
+// Input: nums = [2,7,11,15], target = 9
+//Output: [0,1]
 fun minimumApproach(nums: IntArray, target: Int): IntArray {
     val mutableHasMap = mutableMapOf<Int, Int>()
     for (i in nums.indices) {
-        if (mutableHasMap.containsKey(target - nums[i])) {
+        if (mutableHasMap.containsKey(target - nums[i])) { // 9 - 2 // 9 - 7 = 2
             return intArrayOf(mutableHasMap[target - nums[i]] ?: 0, i)
         }
-        mutableHasMap[nums[i]] = i
+        mutableHasMap[nums[i]] = i // 2 [2,0]
     }
     return intArrayOf()
 
+}
+
+
+data class User(
+    val name: String,
+    val age: Int,
+    val email: String
+) {
+    class Builder {
+        private var name: String = ""
+        private var age: Int = 0
+        private var email: String = ""
+        fun setName(name: String) = apply { this.name = name }
+        fun setAge(age: Int) = apply { this.age = age }
+        fun setEmail(email: String) = apply { this.email = email }
+        fun build() = User(name, age, email)
+
+    }
 }
 
 fun twoSums(nums: IntArray, target: Int): IntArray {
@@ -183,6 +202,26 @@ fun twoSums(nums: IntArray, target: Int): IntArray {
         }
     }
     return intArrayOf(-1, -1)
+}
+
+
+
+fun binarySearchElement(arr: IntArray, target: Int):Int {
+    var low = 0
+    var high = arr.size - 1
+
+    while (low <= high) {
+        val mid = (low + high) / 2
+        if (arr[mid] == target) {
+            return mid
+        }
+        if (arr[mid] < target) {
+            low = mid + 1
+        } else {
+            high = mid
+        }
+    }
+    return -1
 }
 
 data class Product(val name: String, val priceIncents: Int)
@@ -219,21 +258,12 @@ fun simpleFlow(): Flow<Int> = flow {
     }
 }
 
-fun countSubsets(arr: IntArray,target: Int):Int {
-    val n = arr.size
-    val dp = Array( n + 1) { IntArray(target + 1) }
-    for(i in 0..n){
-        dp[i][0] = 1
+fun finMax(arr: IntArray, index:Int = 0, maxSoFar:Int = arr[0]):Int {
+    if (index == arr.size){
+        return maxSoFar
     }
-    for (i in 1..n){
-        for (j in 1..target) {
-            dp[i][j] = dp[i - 1][j]
-                if (arr[i - 1] <= j){
-                    dp[i][j] += dp[i - 1][j - arr[i - 1]]
-                }
-        }
-    }
-    return dp[n][target]
+    val currentMax = if (arr[index] > maxSoFar) arr[index] else maxSoFar
+    return finMax(arr, index + 1, currentMax)
 }
 
 fun String.capitalized(): String =
