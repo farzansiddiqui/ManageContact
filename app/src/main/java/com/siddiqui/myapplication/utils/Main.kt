@@ -271,13 +271,10 @@ fun String.capitalized(): String =
         it.lowercase().replaceFirstChar { firstChat -> firstChat.uppercase() }
     }
 
-fun String.getMiddleName(): String? {
-    val parts = this.trim().split("\\s+".toRegex())
-    return if (parts.size > 2) {
-        parts.subList(1, parts.size - 1).joinToString(" ")
-    } else {
-        null
-    }
+
+
+fun List<Int>.maxNullValue():Int {
+    return this.maxOrNull() ?: 0
 }
 
 fun insertionSort(nums: IntArray) {
@@ -595,7 +592,6 @@ fun traversePeripheral(matrix: Array<IntArray>):List<Int> {
 }
 
 fun isPalindrome(str: String): Boolean {
-
     var i = 0
     var j = str.length - 1
 
@@ -607,6 +603,25 @@ fun isPalindrome(str: String): Boolean {
         j--
     }
     return true
+}
+
+fun maxLength(str:String):Int {
+    val stack = Stack<Int>()
+    stack.push(-1)
+    var maxLen = 0
+    for (i in str.indices){
+        if (str[i] == '('){
+            stack.push(i)
+        }else{
+            stack.pop()
+            if (stack.isEmpty()){
+                stack.push(i)
+            }else{
+                maxLen = maxOf(maxLen, i - stack.peek())
+            }
+        }
+    }
+    return maxLen
 }
 
 
