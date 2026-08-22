@@ -1,9 +1,0 @@
-
-
-
-
-@Preview
-@Composable
-fun DefaultPreView(){
-
-}
