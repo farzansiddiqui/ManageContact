@@ -22,6 +22,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class AuthControllerIntegrationTest {
 
+    private static final String TEST_NAME = "Test User";
+    private static final String TEST_EMAIL = "test.user@example.com";
+    private static final String TEST_PASSWORD = "TestPassword123!";
+    private static final String WRONG_PASSWORD = "WrongTestPassword!";
+    private static final String INVALID_NAME = "";
+    private static final String INVALID_EMAIL = "invalid-email";
+    private static final String INVALID_PASSWORD = "short";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -41,7 +49,7 @@ class AuthControllerIntegrationTest {
 
     @Test
     void signupShouldCreateUser() throws Exception {
-        SignupRequest request = new SignupRequest("Faraz Rahman", "faraz@gmail.com", "Password@123");
+        SignupRequest request = new SignupRequest(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
 
         mockMvc.perform(post("/api/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -49,14 +57,14 @@ class AuthControllerIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("User registered successfully"))
-                .andExpect(jsonPath("$.user.email").value("faraz@gmail.com"));
+                .andExpect(jsonPath("$.user.email").value(TEST_EMAIL));
     }
 
     @Test
     void duplicateEmailShouldBeRejected() throws Exception {
-        userRepository.save(new User("Faraz Rahman", "faraz@gmail.com", passwordEncoder.encode("Password@123")));
+        userRepository.save(new User(TEST_NAME, TEST_EMAIL, passwordEncoder.encode(TEST_PASSWORD)));
 
-        SignupRequest request = new SignupRequest("Faraz Rahman", "faraz@gmail.com", "Password@123");
+        SignupRequest request = new SignupRequest(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
 
         mockMvc.perform(post("/api/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -68,9 +76,9 @@ class AuthControllerIntegrationTest {
 
     @Test
     void loginShouldSucceedWithCorrectPassword() throws Exception {
-        userRepository.save(new User("Faraz Rahman", "faraz@gmail.com", passwordEncoder.encode("Password@123")));
+        userRepository.save(new User(TEST_NAME, TEST_EMAIL, passwordEncoder.encode(TEST_PASSWORD)));
 
-        LoginRequest request = new LoginRequest("faraz@gmail.com", "Password@123");
+        LoginRequest request = new LoginRequest(TEST_EMAIL, TEST_PASSWORD);
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,14 +86,14 @@ class AuthControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Login successful"))
-                .andExpect(jsonPath("$.user.email").value("faraz@gmail.com"));
+                .andExpect(jsonPath("$.user.email").value(TEST_EMAIL));
     }
 
     @Test
     void loginShouldFailWithWrongPassword() throws Exception {
-        userRepository.save(new User("Faraz Rahman", "faraz@gmail.com", passwordEncoder.encode("Password@123")));
+        userRepository.save(new User(TEST_NAME, TEST_EMAIL, passwordEncoder.encode(TEST_PASSWORD)));
 
-        LoginRequest request = new LoginRequest("faraz@gmail.com", "WrongPassword");
+        LoginRequest request = new LoginRequest(TEST_EMAIL, WRONG_PASSWORD);
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,11 +107,11 @@ class AuthControllerIntegrationTest {
         void signupShouldRejectInvalidInput() throws Exception {
                 String invalidRequest = """
                                 {
-                                    "name": "",
-                                    "email": "invalid-email",
-                                    "password": "short"
+                                    "name": "%s",
+                                    "email": "%s",
+                                    "password": "%s"
                                 }
-                                """;
+                                """.formatted(INVALID_NAME, INVALID_EMAIL, INVALID_PASSWORD);
 
                 mockMvc.perform(post("/api/auth/signup")
                                                 .contentType(MediaType.APPLICATION_JSON)
